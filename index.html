@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>StakeBet - Premium Sports Betting</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --secondary: #3b82f6;
+      --dark: #111827;
+      --light: #f3f4f6;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark);
+      color: white;
+      overflow-x: hidden;
+    }
+    
+    /* Theme Toggle */
+    .day-mode {
+      --dark: #f3f4f6;
+      --light: #111827;
+      background-color: var(--dark);
+      color: var(--light);
+    }
+    
+    .day-mode .bg-black {
+      background-color: var(--dark) !important;
+    }
+    
+    .day-mode .text-white {
+      color: var(--light) !important;
+    }
+    
+    .day-mode .border-white {
+      border-color: var(--light) !important;
+    }
+    
+    .day-mode .bg-gray-800 {
+      background-color: #e5e7eb !important;
+    }
+    
+    .day-mode .text-gray-400 {
+      color: #4b5563 !important;
+    }
+    
+    .day-mode .border-gray-700 {
+      border-color: #d1d5db !important;
+    }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Custom Classes */
+    .glow-on-hover {
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .glow-on-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background-size: 200% 200%;
+      animation: gradientBG 8s ease infinite;
+    }
+    
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .pulse-animation {
+      animation: pulse 2s ease infinite;
+    }
+    
+    .slide-in {
+      animation: slideIn 0.8s ease-out forwards;
+    }
+    
+    .fade-in {
+      animation: fadeIn 1.5s ease-in forwards;
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+      transform: perspective(1000px) rotateY(0deg);
+    }
+    
+    .card-hover:hover {
+      transform: perspective(1000px) rotateY(5deg);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Chatbot Styles */
+    .chatbot-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-icon:hover {
+      transform: scale(1.1);
+    }
+    
+    .chatbot-window {
+      width: 350px;
+      height: 500px;
+      background-color: #1f2937;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      display: none;
+    }
+    
+    .chatbot-window.active {
+      transform: translateY(0);
+      opacity: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chatbot-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 15px;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .chatbot-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background-color: #111827;
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      line-height: 1.4;
+      position: relative;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .user-message {
+      background-color: var(--primary);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 5px;
+    }
+    
+    .bot-message {
+      background-color: #374151;
+      color: white;
+      margin-right: auto;
+      border-bottom-left-radius: 5px;
+    }
+    
+    .chatbot-input {
+      display: flex;
+      padding: 10px;
+      background-color: #1f2937;
+      border-top: 1px solid #374151;
+    }
+    
+    .chatbot-input input {
+      flex: 1;
+      padding: 10px 15px;
+      border-radius: 25px;
+      border: none;
+      background-color: #374151;
+      color: white;
+      outline: none;
+    }
+    
+    .chatbot-input button {
+      margin-left: 10px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .chatbot-input button:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+    
+    /* Sports Odds Ticker */
+    .odds-ticker {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+    }
+    
+    .odds-ticker-content {
+      display: inline-block;
+      animation: ticker 30s linear infinite;
+    }
+    
+    @keyframes ticker {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    
+    .odds-item {
+      display: inline-block;
+      margin: 0 30px;
+      color: white;
+    }
+    
+    .odds-team {
+      font-weight: bold;
+      margin: 0 5px;
+    }
+    
+    .odds-value {
+      color: var(--primary);
+      font-weight: bold;
+    }
+    
+    /* Live Badge */
+    .live-badge {
+      background-color: #ef4444;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 10px;
+      animation: pulse 1.5s infinite;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem !important;
+      }
+      
+      .hero-subtitle {
+        font-size: 1rem !important;
+      }
+      
+      .chatbot-window {
+        width: 300px;
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-black text-white">
+  <!-- Odds Ticker -->
+  <div class="odds-ticker">
+    <div class="odds-ticker-content">
+      <span class="odds-item">
+        <span class="odds-team">Man Utd</span> vs 
+        <span class="odds-team">Liverpool</span> 
+        <span class="odds-value">2.10 - 3.25 - 3.50</span>
+      </span>
+      <span class="odds-item">
+        <span class="odds-team">Lakers</span> vs 
+        <span class="odds-team">Warriors</span> 
+        <span class="odds-value">1.85 - 2.10</span>
+      </span>
+      <span class="odds-item">
+        <span class="odds-team">Dallas Cowboys</span> vs 
+        <span class="odds-team">Kansas City</span> 
+        <span class="odds-value">2.30 - 1.65</span>
+      </span>
+      <span class="odds-item">
+        <span class="odds-team">Djokovic</span> vs 
+        <span class="odds-team">Alcaraz</span> 
+        <span class="odds-value">1.75 - 2.05</span>
+      </span>
+      <span class="odds-item">
+        <span class="odds-team">PSG</span> vs 
+        <span class="odds-team">Bayern</span> 
+        <span class="odds-value">2.40 - 3.00 - 2.90</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-black py-4 px-4 lg:px-0 sticky top-0 z-50 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+       
+        <span class="text-xl font-bold gradient-text hidden sm:block">STAKEBET</span>
+      </div>
+      <nav class="hidden md:flex space-x-6 items-center">
+        <a class="text-lg font-semibold hover:text-green-500 transition-colors" href="#">Home</a>
+        <a class="text-lg font-semibold hover:text-green-500 transition-colors" href="#features">Features</a>
+        <a class="text-lg font-semibold hover:text-green-500 transition-colors" href="#events">Events</a>
+        <a class="text-lg font-semibold hover:text-green-500 transition-colors" href="#promotions">Promotions</a>
+        <a class="text-lg font-semibold hover:text-green-500 transition-colors" href="#testimonials">Testimonials</a>
+        <a class="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-full text-lg font-semibold glow-on-hover transition-colors" href="#signup">Sign Up</a>
+        <button class="bg-transparent border border-white hover:border-green-500 text-white hover:text-green-500 px-4 py-2 rounded-full text-lg font-semibold glow-on-hover transition-colors" id="toggleMode">
+          Day Mode
+        </button>
+      </nav>
+      <button class="md:hidden text-2xl" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div class="md:hidden hidden bg-gray-900 mt-2 py-2 rounded-lg" id="mobileMenu">
+      <a class="block px-4 py-2 hover:bg-gray-800" href="#">Home</a>
+      <a class="block px-4 py-2 hover:bg-gray-800" href="#features">Features</a>
+      <a class="block px-4 py-2 hover:bg-gray-800" href="#events">Events</a>
+      <a class="block px-4 py-2 hover:bg-gray-800" href="#promotions">Promotions</a>
+      <a class="block px-4 py-2 hover:bg-gray-800" href="#testimonials">Testimonials</a>
+      <a class="block px-4 py-2 bg-green-500 text-black rounded mx-2 text-center font-semibold" href="#signup">Sign Up</a>
+      <button class="block w-full px-4 py-2 text-left mt-2" id="mobileToggleMode">
+        <i class="fas fa-sun mr-2"></i>Toggle Theme
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative h-screen flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 bg-black/60 z-10"></div>
+    <video autoplay loop muted playsinline class="absolute w-full h-full object-cover">
+      <source src="https://assets.mixkit.co/videos/preview/mixkit-group-of-friends-cheering-a-victory-4535-large.mp4" type="video/mp4">
+    </video>
+    
+    <div class="container mx-auto px-4 z-20 text-center">
+      <h1 class="hero-title text-5xl md:text-7xl font-extrabold mb-6 fade-in">
+        <span class="gradient-text">Bet Smarter.</span> <span class="text-white">Win Bigger.</span>
+      </h1>
+      <p class="hero-subtitle text-xl md:text-2xl mb-8 max-w-3xl mx-auto fade-in">
+        Join the ultimate sports betting experience with real-time odds, AI-powered insights, and exclusive bonuses.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4 fade-in">
+        <a href="#signup" class="bg-green-500 hover:bg-green-600 text-black px-8 py-4 rounded-full text-lg font-bold glow-on-hover transition-all transform hover:scale-105">
+          Get Started Now <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+        <a href="#features" class="bg-transparent border-2 border-white hover:border-green-500 text-white hover:text-green-500 px-8 py-4 rounded-full text-lg font-bold glow-on-hover transition-all transform hover:scale-105">
+          Learn More <i class="fas fa-info-circle ml-2"></i>
+        </a>
+      </div>
+      
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <div class="bg-black/40 backdrop-blur-sm p-4 rounded-lg border border-gray-700 slide-in hover:border-green-500 transition-all">
+          <div class="text-green-500 text-3xl mb-2"><i class="fas fa-bolt"></i></div>
+          <h3 class="font-bold">Instant Payouts</h3>
+        </div>
+        <div class="bg-black/40 backdrop-blur-sm p-4 rounded-lg border border-gray-700 slide-in hover:border-green-500 transition-all delay-100">
+          <div class="text-green-500 text-3xl mb-2"><i class="fas fa-shield-alt"></i></div>
+          <h3 class="font-bold">Secure Bets</h3>
+        </div>
+        <div class="bg-black/40 backdrop-blur-sm p-4 rounded-lg border border-gray-700 slide-in hover:border-green-500 transition-all delay-200">
+          <div class="text-green-500 text-3xl mb-2"><i class="fas fa-robot"></i></div>
+          <h3 class="font-bold">AI Predictions</h3>
+        </div>
+        <div class="bg-black/40 backdrop-blur-sm p-4 rounded-lg border border-gray-700 slide-in hover:border-green-500 transition-all delay-300">
+          <div class="text-green-500 text-3xl mb-2"><i class="fas fa-trophy"></i></div>
+          <h3 class="font-bold">VIP Rewards</h3>
+        </div>
+      </div>
+    </div>
+    
+    <div class="absolute bottom-10 left-0 right-0 flex justify-center z-20">
+      <a href="#features" class="text-white animate-bounce">
+        <i class="fas fa-chevron-down text-2xl"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Partners Section -->
+  <section class="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+    <div class="container mx-auto px-4">
+      <h2 class="text-center text-2xl md:text-3xl font-bold mb-12">Trusted By Leading Sportsbooks</h2>
+      <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+        <img src="1.svg" alt="Pinnacle" class="h-8 opacity-70 hover:opacity-100 transition-opacity">
+        <img src="2.svg" alt="Bet365" class="h-8 opacity-70 hover:opacity-100 transition-opacity">
+        <img src="3.svg" alt="DraftKings" class="h-10 opacity-70 hover:opacity-100 transition-opacity">
+        <img src="4.svg" alt="FanDuel" class="h-8 opacity-70 hover:opacity-100 transition-opacity">
+        <img src="5.svg" alt="BetMGM" class="h-10 opacity-70 hover:opacity-100 transition-opacity">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Why Choose <span class="gradient-text">StakeBet</span>?</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Experience the future of sports betting with our cutting-edge platform</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-gray-800 p-8 rounded-xl card-hover transition-all hover:shadow-xl hover:shadow-green-500/10">
+          <div class="text-green-500 text-4xl mb-4">
+            <i class="fas fa-robot"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">AI Betting Assistant</h3>
+          <p class="text-gray-400">Our advanced AI analyzes thousands of data points to give you personalized betting recommendations.</p>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="bg-gray-800 p-8 rounded-xl card-hover transition-all hover:shadow-xl hover:shadow-blue-500/10">
+          <div class="text-blue-500 text-4xl mb-4">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Real-Time Odds</h3>
+          <p class="text-gray-400">Get live updates with the most competitive odds across all major sports and events.</p>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="bg-gray-800 p-8 rounded-xl card-hover transition-all hover:shadow-xl hover:shadow-purple-500/10">
+          <div class="text-purple-500 text-4xl mb-4">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Advanced Analytics</h3>
+          <p class="text-gray-400">Deep dive into team stats, player performance, and historical data to make informed bets.</p>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div class="bg-gray-800 p-8 rounded-xl card-hover transition-all hover:shadow-xl hover:shadow-yellow-500/10">
+          <div class="text-yellow-500 text-4xl mb-4">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Seamless Mobile</h3>
+          <p class="text-gray-400">Bet on the go with our optimized mobile experience that works flawlessly on any device.</p>
+        </div>
+        
+        <!-- Feature 5 -->
+        <div class="bg-gray-800 p-8 rounded-xl card-hover transition-all hover:shadow-xl hover:shadow-red-500/10">
+          <div class="text-red-500 text-4xl mb-4">
+            <i class="fas fa-lock"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Bank-Level Security</h3>
+          <p class="text-gray-400">Your data and funds are protected with enterprise-grade encryption and security protocols.</p>
+        </div>
+        
+        <!-- Feature 6 -->
+        <div class="bg-gray-800 p-8 rounded-xl card-hover transition-all hover:shadow-xl hover:shadow-pink-500/10">
+          <div class="text-pink-500 text-4xl mb-4">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">24/7 Support</h3>
+          <p class="text-gray-400">Our dedicated support team is available around the clock to assist with any questions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Events Section -->
+  <section id="events" class="py-20 bg-black">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Live & Upcoming <span class="gradient-text">Events</span></h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Bet on your favorite sports with competitive odds</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Event 1 -->
+        <div class="bg-gray-900 rounded-xl overflow-hidden card-hover group">
+          <div class="relative">
+            <img src="photo-1574629810360-7efbbe195018.jpeg" alt="Premier League" class="w-full h-48 object-cover">
+            <div class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center">
+              <span class="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></span>
+              LIVE
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-sm text-gray-400">Football • Premier League</span>
+              <span class="text-sm text-green-500">Today, 19:45</span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+              <div class="text-center">
+                <span class="text-sm font-medium">Man Utd</span>
+              </div>
+              <div class="text-center px-4">
+                <span class="text-xs text-gray-400">VS</span>
+              </div>
+              <div class="text-center">
+                <span class="text-sm font-medium">Liverpool</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              <button class="bg-gray-800 hover:bg-green-500 hover:text-black py-2 rounded text-sm font-medium transition-colors">2.10</button>
+              <button class="bg-gray-800 hover:bg-green-500 hover:text-black py-2 rounded text-sm font-medium transition-colors">3.25</button>
+              <button class="bg-gray-800 hover:bg-green-500 hover:text-black py-2 rounded text-sm font-medium transition-colors">3.50</button>
+            </div>
+            <button class="w-full bg-green-500 hover:bg-green-600 text-black py-2 rounded font-medium transition-colors">
+              Place Bet
+            </button>
+          </div>
+        </div>
+        
+        <!-- Event 2 -->
+        <div class="bg-gray-900 rounded-xl overflow-hidden card-hover group">
+          <div class="relative">
+            <img src="photo-1546519638-68e109498ffc.jpeg" alt="NBA" class="w-full h-48 object-cover">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-sm text-gray-400">Basketball • NBA</span>
+              <span class="text-sm text-green-500">Tomorrow, 02:30</span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+              <div class="text-center">
+                <span class="text-sm font-medium">Lakers</span>
+              </div>
+              <div class="text-center px-4">
+                <span class="text-xs text-gray-400">VS</span>
+              </div>
+              <div class="text-center">
+                <span class="text-sm font-medium">Warriors</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+              <button class="bg-gray-800 hover:bg-green-500 hover:text-black py-2 rounded text-sm font-medium transition-colors">1.85</button>
+              <button class="bg-gray-800 hover:bg-green-500 hover:text-black py-2 rounded text-sm font-medium transition-colors">2.10</button>
+            </div>
+            <button class="w-full bg-green-500 hover:bg-green-600 text-black py-2 rounded font-medium transition-colors">
+              Place Bet
+            </button>
+          </div>
+        </div>
+        
+        <!-- Event 3 -->
+        <div class="bg-gray-900 rounded-xl overflow-hidden card-hover group">
+          <div class="relative">
+            <img src="photo-1571019613454-1cb2f99b2d8b.jpeg" alt="UFC" class="w-full h-48 object-cover">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-sm text-gray-400">MMA • UFC 300</span>
+              <span class="text-sm text-green-500">Sat, 22:00</span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+              <div class="text-center">
+                <span class="text-sm font-medium">McGregor</span>
+              </div>
+              <div class="text-center px-4">
+                <span class="text-xs text-gray-400">VS</span>
+              </div>
+              <div class="text-center">
+                <span class="text-sm font-medium">Chandler</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+              <button class="bg-gray-800 hover:bg-green-500 hover:text-black py-2 rounded text-sm font-medium transition-colors">1.65</button>
+              <button class="bg-gray-800 hover:bg-green-500 hover:text-black py-2 rounded text-sm font-medium transition-colors">2.25</button>
+            </div>
+            <button class="w-full bg-green-500 hover:bg-green-600 text-black py-2 rounded font-medium transition-colors">
+              Place Bet
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-12">
+        <a href="#" class="inline-flex items-center text-green-500 hover:text-green-400 font-medium">
+          View All Events
+          <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Promotions Section -->
+  <section id="promotions" class="py-20 bg-gradient-to-br from-gray-900 to-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Exclusive <span class="gradient-text">Promotions</span></h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Boost your bankroll with our special offers</p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Promotion 1 -->
+        <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-green-500 to-green-700 p-8 text-white h-64 flex flex-col justify-between pulse-animation">
+          <div>
+            <div class="text-4xl mb-2"><i class="fas fa-gift"></i></div>
+            <h3 class="text-2xl font-bold mb-2">Welcome Bonus</h3>
+            <p class="mb-4">100% match up to $500 on your first deposit</p>
+          </div>
+          <button class="bg-black hover:bg-gray-900 text-white py-2 px-4 rounded-full font-medium w-full transition-colors">
+            Claim Now
+          </button>
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full"></div>
+          <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-white/5 rounded-full"></div>
+        </div>
+        
+        <!-- Promotion 2 -->
+        <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 p-8 text-white h-64 flex flex-col justify-between">
+          <div>
+            <div class="text-4xl mb-2"><i class="fas fa-sync-alt"></i></div>
+            <h3 class="text-2xl font-bold mb-2">Risk-Free Bet</h3>
+            <p class="mb-4">Get your stake back up to $100 if your first bet loses</p>
+          </div>
+          <button class="bg-black hover:bg-gray-900 text-white py-2 px-4 rounded-full font-medium w-full transition-colors">
+            Learn More
+          </button>
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full"></div>
+        </div>
+        
+        <!-- Promotion 3 -->
+        <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 p-8 text-white h-64 flex flex-col justify-between">
+          <div>
+            <div class="text-4xl mb-2"><i class="fas fa-users"></i></div>
+            <h3 class="text-2xl font-bold mb-2">Referral Program</h3>
+            <p class="mb-4">Earn $50 for each friend who signs up and deposits</p>
+          </div>
+          <button class="bg-black hover:bg-gray-900 text-white py-2 px-4 rounded-full font-medium w-full transition-colors">
+            Invite Friends
+          </button>
+          <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white/5 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="py-20 bg-black">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our <span class="gradient-text">Users Say</span></h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Join thousands of satisfied bettors worldwide</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="bg-gray-900 p-8 rounded-xl">
+          <div class="flex items-center mb-4">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">Michael T.</h4>
+              <div class="flex text-yellow-400">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+          <p class="text-gray-400">"The AI predictions are incredibly accurate. I've increased my winning rate by 35% since I started using StakeBet."</p>
+        </div>
+        
+        <!-- Testimonial 2 -->
+        <div class="bg-gray-900 p-8 rounded-xl">
+          <div class="flex items-center mb-4">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">Sarah K.</h4>
+              <div class="flex text-yellow-400">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </div>
+            </div>
+          </div>
+          <p class="text-gray-400">"Withdrawals are processed instantly, unlike other platforms that make you wait days. Highly recommend!"</p>
+        </div>
+        
+        <!-- Testimonial 3 -->
+        <div class="bg-gray-900 p-8 rounded-xl">
+          <div class="flex items-center mb-4">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">David L.</h4>
+              <div class="flex text-yellow-400">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+          <p class="text-gray-400">"The live betting interface is the best I've used. Odds update in real-time and the platform never lags."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 gradient-bg">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Start Winning?</h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto">Join StakeBet today and get your exclusive welcome bonus</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#signup" class="bg-black hover:bg-gray-900 text-white px-8 py-4 rounded-full text-lg font-bold glow-on-hover transition-all transform hover:scale-105">
+          Sign Up Now <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+        <a href="#promotions" class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full text-lg font-bold glow-on-hover transition-all transform hover:scale-105">
+          View Bonuses <i class="fas fa-gift ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Signup Section -->
+  <section id="signup" class="py-20 bg-black">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto bg-gray-900 rounded-xl overflow-hidden">
+        <div class="p-8 md:p-12">
+          <h2 class="text-3xl font-bold mb-2">Create Your Account</h2>
+          <p class="text-gray-400 mb-8">Join StakeBet in less than a minute</p>
+          
+          <form class="space-y-6">
+            <div>
+              <label class="block text-gray-400 mb-2">Username</label>
+              <input type="text" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-green-500" placeholder="Choose a username">
+            </div>
+            
+            <div>
+              <label class="block text-gray-400 mb-2">Email</label>
+              <input type="email" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-green-500" placeholder="Your email address">
+            </div>
+            
+            <div>
+              <label class="block text-gray-400 mb-2">Password</label>
+              <input type="password" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-green-500" placeholder="Create a password">
+            </div>
+            
+            <div class="flex items-center">
+              <input type="checkbox" id="terms" class="mr-2">
+              <label for="terms" class="text-sm text-gray-400">I agree to the <a href="#" class="text-green-500 hover:underline">Terms & Conditions</a></label>
+            </div>
+            
+            <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-black py-3 rounded-lg font-bold transition-colors">
+              Create Account
+            </button>
+          </form>
+          
+          <div class="mt-6 text-center text-gray-400">
+            Already have an account? <a href="#" class="text-green-500 hover:underline">Log in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">StakeBet</h3>
+          <p class="text-gray-400">The premier destination for sports betting enthusiasts with AI-powered insights and real-time odds.</p>
+        </div>
+        
+        <div>
+          <h4 class="font-bold mb-4">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-green-500 transition-colors">Home</a></li>
+            <li><a href="#features" class="text-gray-400 hover:text-green-500 transition-colors">Features</a></li>
+            <li><a href="#events" class="text-gray-400 hover:text-green-500 transition-colors">Events</a></li>
+            <li><a href="#promotions" class="text-gray-400 hover:text-green-500 transition-colors">Promotions</a></li>
+            <li><a href="#signup" class="text-gray-400 hover:text-green-500 transition-colors">Sign Up</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold mb-4">Sports</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-green-500 transition-colors">Football</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-green-500 transition-colors">Basketball</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-green-500 transition-colors">Tennis</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-green-500 transition-colors">MMA</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-green-500 transition-colors">Esports</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold mb-4">Contact</h4>
+          <ul class="space-y-2">
+            <li class="text-gray-400"><i class="fas fa-envelope mr-2"></i> support@stakebet.com</li>
+            <li class="text-gray-400"><i class="fas fa-phone mr-2"></i> +1 (555) 123-4567</li>
+            <li class="text-gray-400"><i class="fas fa-map-marker-alt mr-2"></i> 123 Betting St, Las Vegas</li>
+          </ul>
+          <div class="mt-4 flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-green-500 transition-colors"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-green-500 transition-colors"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-gray-400 hover:text-green-500 transition-colors"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-green-500 transition-colors"><i class="fab fa-discord"></i></a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 StakeBet. All rights reserved. | <a href="#" class="hover:text-green-500 transition-colors">Responsible Gambling</a> | <a href="#" class="hover:text-green-500 transition-colors">Privacy Policy</a> | <a href="#" class="hover:text-green-500 transition-colors">Terms of Service</a></p>
+        <p class="mt-2">StakeBet is licensed and regulated by the Nevada Gaming Commission. Gambling problem? Call 1-800-GAMBLER.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Chatbot Container -->
+  <div class="chatbot-container">
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header">
+        <span>StakeBet AI Assistant</span>
+        <button id="closeChatbot"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="chatbot-messages" id="chatbotMessages">
+        <div class="message bot-message">
+          Hi there! 👋 I'm your StakeBet AI assistant. How can I help you today?
+        </div>
+        <div class="message bot-message">
+          You can ask me about:
+          <ul class="list-disc pl-5 mt-1">
+            <li>Current odds and betting markets</li>
+            <li>How to place a bet</li>
+            <li>Account and payment questions</li>
+            <li>Responsible gambling information</li>
+          </ul>
+        </div>
+      </div>
+      <div class="chatbot-input">
+        <input type="text" id="chatbotInput" placeholder="Ask me about sports betting..." />
+        <button id="sendChatbotMessage"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+    <div class="chatbot-icon" id="chatbotIcon">
+      <i class="fas fa-comment-dots text-2xl"></i>
+    </div>
+  </div>
+
+ <!-- Scripts -->
+<script>
+  // Theme Toggle
+  const toggleModeBtn = document.getElementById("toggleMode");
+  const mobileToggleModeBtn = document.getElementById("mobileToggleMode");
+  const body = document.body;
+  
+  function toggleTheme() {
+    body.classList.toggle("day-mode");
+    const isDayMode = body.classList.contains("day-mode");
+    toggleModeBtn.innerText = isDayMode ? "Night Mode" : "Day Mode";
+    localStorage.setItem("theme", isDayMode ? "day" : "night");
+  }
+  
+  toggleModeBtn.addEventListener("click", toggleTheme);
+  mobileToggleModeBtn.addEventListener("click", toggleTheme);
+  
+  // Set initial theme from localStorage
+  if (localStorage.getItem("theme") === "day") {
+    body.classList.add("day-mode");
+    toggleModeBtn.innerText = "Night Mode";
+  }
+  
+  // Mobile Menu Toggle
+  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+  
+  mobileMenuBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+  
+  // Chatbot Functionality with Google Gemini API
+  const chatbotIcon = document.getElementById("chatbotIcon");
+  const chatbotWindow = document.getElementById("chatbotWindow");
+  const closeChatbot = document.getElementById("closeChatbot");
+  const chatbotInput = document.getElementById("chatbotInput");
+  const sendChatbotMessage = document.getElementById("sendChatbotMessage");
+  const chatbotMessages = document.getElementById("chatbotMessages");
+  
+  // Google Gemini API configuration
+  const GOOGLE_API_KEY = 'AIzaSyDudnt6l_RVPTuwnnj0VqrtLq8WVDewrMY';
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GOOGLE_API_KEY}`;
+  
+  // Chat history for context
+  let chatHistory = [
+    {
+      role: "model",
+      parts: [{ text: "Hi there! 👋 I'm your StakeBet AI assistant. How can I help you today?" }]
+    },
+    {
+      role: "model",
+      parts: [{ text: "You can ask me about sports betting, odds, strategies, or any questions about the StakeBet platform. I'm here to help!" }]
+    }
+  ];
+  
+  // Toggle chatbot window
+  chatbotIcon.addEventListener("click", () => {
+    chatbotWindow.classList.toggle("active");
+  });
+  
+  closeChatbot.addEventListener("click", () => {
+    chatbotWindow.classList.remove("active");
+  });
+  
+  // Function to add message to chat
+  function addMessage(role, text) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${role}-message`;
+    messageDiv.textContent = text;
+    chatbotMessages.appendChild(messageDiv);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    
+    // Add to chat history
+    chatHistory.push({
+      role: role === "user" ? "user" : "model",
+      parts: [{ text: text }]
+    });
+    
+    // Keep chat history manageable (last 10 messages)
+    if (chatHistory.length > 10) {
+      chatHistory = chatHistory.slice(-10);
+    }
+  }
+  
+  // Function to get AI response
+  async function getAIResponse(userMessage) {
+    try {
+      // Add user message to chat
+      addMessage("user", userMessage);
+      
+      // Show typing indicator
+      const typingIndicator = document.createElement("div");
+      typingIndicator.className = "message bot-message";
+      typingIndicator.textContent = "...";
+      typingIndicator.id = "typingIndicator";
+      chatbotMessages.appendChild(typingIndicator);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      
+      // Prepare the request data
+      const requestData = {
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: "You are a helpful sports betting assistant for StakeBet. Provide concise, accurate answers about sports betting, odds, strategies, and the StakeBet platform. Keep responses under 3 sentences when possible." }]
+          },
+          ...chatHistory
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 200
+        }
+      };
+      
+      // Make API call
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestData)
+      });
+      
+      const data = await response.json();
+      
+      // Remove typing indicator
+      document.getElementById("typingIndicator")?.remove();
+      
+      // Get the AI response text
+      let aiResponse = "I'm sorry, I couldn't process that request. Please try again.";
+      if (data.candidates && data.candidates[0].content.parts[0].text) {
+        aiResponse = data.candidates[0].content.parts[0].text;
+      }
+      
+      // Add AI response to chat
+      addMessage("bot", aiResponse);
+      
+    } catch (error) {
+      console.error("Error calling Gemini API:", error);
+      document.getElementById("typingIndicator")?.remove();
+      addMessage("bot", "Sorry, I'm having trouble connecting to the service. Please try again later.");
+    }
+  }
+  
+  // Send message function
+  function sendMessage() {
+    const message = chatbotInput.value.trim();
+    if (!message) return;
+    
+    // Clear input
+    chatbotInput.value = "";
+    
+    // Get AI response
+    getAIResponse(message);
+  }
+  
+  // Send message on button click or Enter key
+  sendChatbotMessage.addEventListener("click", sendMessage);
+  chatbotInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+  
+  // Initialize chat with welcome messages
+  addMessage("bot", "Hi there! 👋 I'm your StakeBet AI assistant. How can I help you today?");
+  addMessage("bot", "You can ask me about sports betting, odds, strategies, or any questions about the StakeBet platform. I'm here to help!");
+  
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth'
+        });
+        
+        // Close mobile menu if open
+        if (!mobileMenu.classList.contains("hidden")) {
+          mobileMenu.classList.add("hidden");
+        }
+      }
+    });
+  });
+  
+  // Intersection Observer for animations
+  const animateOnScroll = () => {
+    const elements = document.querySelectorAll('.slide-in, .fade-in');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateX(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    elements.forEach(el => {
+      el.style.opacity = 0;
+      if (el.classList.contains('slide-in')) {
+        el.style.transform = 'translateX(100px)';
+      }
+      observer.observe(el);
+    });
+  };
+  
+  // Initialize animations when DOM is loaded
+  document.addEventListener('DOMContentLoaded', animateOnScroll);
+</script>
+</body>
+</html>
